@@ -29,10 +29,8 @@ def blue_light():
     tbot.set_underlight(LIGHT_MIDDLE_RIGHT, 0,0,255, show=False)
     tbot.set_underlight(LIGHT_REAR_RIGHT, 0,0,255, show=False)
     tbot.show_underlighting()
-
-def detect_faces():
-    stream = io.BytesIO()
-
+    
+def line_following():
     # capture an image
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
@@ -43,29 +41,42 @@ def detect_faces():
 
     # assign the image from the cv2 buffer
     image = cv2.imdecode(buff, 1)
+    
+    #image = self.bridge.imgmsg_to_cv2(msg,desired_encoding='bgr8')
+    #hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV) 
+    # change below lines to map the color you wanted robot to follow
+    lower_yellow = numpy.array([ 0,  150,  0]) #40,0,0  50,0,0
+    upper_yellow = numpy.array([255, 200, 250]) #255,255,100   100,100,100
+    mask = cv2.inRange(image, lower_yellow, upper_yellow)
+    mask_image=mask
+    vel=[0,0,0]
+    #cv2.imshow("mask",mask)
+    #cv2.waitKey(1)
 
-    # import the cascade file - needs to be in the same folder
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-    # convert to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # detect faces
-    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
-
-    print("Found " + str(len(faces)) + " face(s)")
-    if len(faces) > 0:
-        green_light()
-    else:
-        blue_light()
-    return faces, image
-   
-def write_file(faces, image, filename):
-    # write file
-    for (x,y,w,h) in faces:
-        cv2.rectangle(image, (x,y), (x+w,y+h),(255,255,0),4)
-
-    cv2.imwrite(filename, image)
-
+    h, w, d = image.shape
+    search_top = 3*h/4
+    search_bot = 3*h/4 + 20
+    mask[0:search_top, 0:w] = 0
+    mask[search_bot:h, 0:w] = 0
+    mask[0:h, 0:50] = 0
+    mask[0:h, w-50:w] = 0
+    M = cv2.moments(mask)
+    #print(M)
+    if M['m00'] > 0:
+        cx = int(M['m10']/M['m00'])
+        cy = int(M['m01']/M['m00'])
+        result=cv2.circle(image, (cx, cy), 20, (0,0,255), -1)
+        #cv2.imshow("result",result)
+        #cv2.waitKey(1)
+        # CONTROL starts
+        err = cx - w/2
+        vel[0] = 0.1
+        vel[2] = 0.15*(-float(err) / 100)
+        print("ERROR",err)
+        if err > 0:
+            green_light()
+        else:
+            blue_light()
+        
 while True or KeyboardInterrupt:
-    faces, image = detect_faces()
+    faces, image = line_following()
