@@ -1,3 +1,5 @@
+# This code was taken from https://github.com/kevinmcaleer/companion_bot.git
+
 import io
 import picamera
 import cv2
