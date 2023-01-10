@@ -107,13 +107,14 @@ def color_detection(image):
     
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M00=[M_r['m00'],M_y['m00'],M_g['m00'],M_b['m00']]
+    print("color_det",color_det)
+    print("M",M00)
     index=0
     no_color=True
     for i in range(3):
         if color_det[i]==True:
             no_color=False
             if M00[i] > M00[index]:
-                print("M00",M00[i])
                 index=i
     if no_color==False:
         if index==0:
