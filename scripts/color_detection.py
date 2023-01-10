@@ -95,7 +95,7 @@ def color_detection(image):
     no_color=True
     for i in range(3):
         if color_det[i]==True:
-            no_color_False
+            no_color=False
             if M00[i] > M00[index]:
                 index=i
     if no_color==False:
