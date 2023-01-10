@@ -15,6 +15,22 @@ CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
+def distance_detection():
+    # Take 10 measurements rapidly
+    for i in range(10):
+        clock_check = time.perf_counter()
+        distance = tbot.read_distance(timeout=25, samples=3)
+        #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
+        time.sleep(0.01)
+
+    # Take 10 measurements allowing longer time for measuring greater distances
+    for i in range(10):
+        clock_check = time.perf_counter()
+        distance = tbot.read_distance(timeout=200, samples=9)
+        #print("Slower: Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
+        time.sleep(0.01)
+    return distance
+
 def capture_image():
     stream = io.BytesIO()
     # capture an image
@@ -97,6 +113,7 @@ def color_detection(image):
         if color_det[i]==True:
             no_color=False
             if M00[i] > M00[index]:
+                print("M00",M00[i])
                 index=i
     if no_color==False:
         if index==0:
@@ -150,5 +167,10 @@ def color_detection(image):
                     tbot.fill_underlighting(BLACK)            
        '''                 
 while True or KeyboardInterrupt:
-    image=capture_image()
-    color_detection(image)
+    distance=distance_detection()
+    if distance<50: #50cm threshold
+        image=capture_image()
+        color_detection(image)
+    else:
+        print("NO OBJECT DETECTED")
+        tbot.fill_underlighting(BLACK)   
