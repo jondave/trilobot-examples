@@ -45,10 +45,10 @@ def capture_image():
   
 def check_color(mask,h,w):
     
-    search_top = int(h/2 - h/4)
-    search_bot = int(h/2 + h/4)
-    search_left = int(w/2 - w/4)
-    search_right = int(w/2 + w/4)
+    search_top = int(h/2 - h/5)
+    search_bot = int(h/2 + h/5)
+    search_left = int(w/2 - w/5)
+    search_right = int(w/2 + w/5)
     mask[0:search_top, 0:w] = 0
     mask[search_bot:h, 0:w] = 0
     mask[0:h, 0:search_left] = 0
@@ -98,8 +98,6 @@ def color_detection(image):
 
     h, w, d = image.shape
 
-    color_det=False
-    mask=mask_r
     [color_det_r,M_r]=check_color(mask_r,h,w)
     [color_det_y,M_y]=check_color(mask_y,h,w)
     [color_det_g,M_g]=check_color(mask_g,h,w)
@@ -169,7 +167,7 @@ def color_detection(image):
        '''                 
 while True or KeyboardInterrupt:
     distance=distance_detection()
-    if distance<50: #50cm threshold
+    if distance<30: #30cm threshold
         image=capture_image()
         color_detection(image)
     else:
