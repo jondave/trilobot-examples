@@ -65,15 +65,15 @@ def locate_color(M,w,image):
     cx = int(M['m10']/M['m00'])
     cy = int(M['m01']/M['m00'])
     err = cx - w/2
-    print("ERROR",err)
-    result=cv2.circle(image, (cx, cy), 20, (0,0,255), -1)
-    cv2.imwrite("result.png", result)
+    #print("ERROR",err)
+    #result=cv2.circle(image, (cx, cy), 20, (0,0,255), -1)
+    #cv2.imwrite("result.png", result)
     
     #cv2.imshow("result",result)
     #cv2.waitKey(1)
     # CONTROL starts
     
-    return cx,cy,err
+    return [cx,cy,err]
 
 def color_detection(image):
     ## convert to hsv
@@ -107,34 +107,38 @@ def color_detection(image):
     M00=[M_r['m00'],M_y['m00'],M_g['m00'],M_b['m00']]
     print("color_det",color_det)
     print("M",M00)
-    index=0
-    no_color=True
+    unknown_color=True
     for i in range(3):
         if color_det[i]==True:
-            no_color=False
+            if unknown_color==True:
+                index=i
+                unknown_color=False
             if M00[i] < M00[index]:
                 index=i
     print("index",index)
-    if no_color==False:
+    if unknown_color==False:
         if index==0:
-            print("RED")
-            locate_color(M_r,w,image)
+            object_color="RED OBJECT"
+            object_pos=locate_color(M_r,w,image)
             tbot.fill_underlighting(RED)
         elif index==1:
-            print("YELLOW")
-            locate_color(M_y,w,image)
+            object_color="YELLOW OBJECT"
+            object_pos=locate_color(M_y,w,image)
             tbot.fill_underlighting(YELLOW)
         elif index==2:
-            print("GREEN")
-            locate_color(M_g,w,image)
+            object_color="GREEN OBJECT"
+            object_pos=locate_color(M_g,w,image)
             tbot.fill_underlighting(GREEN)
         elif index==3:
-            print("BLUE")
-            locate_color(M_b,w,image)
+            object_color="BLUE OBJECT"
+            object_pos=locate_color(M_b,w,image)
             tbot.fill_underlighting(BLUE)
     else:
-        print("NO COLOR")
+        object_color="UNKNOWN COLOR"
+        object_pos=[0,0,0]
         tbot.fill_underlighting(BLACK)    
+        
+    return object_color,object_pos
         
     '''
     if color_det_r==True:
@@ -170,7 +174,8 @@ while True or KeyboardInterrupt:
     distance=distance_detection()
     if distance<30: #30cm threshold
         image=capture_image()
-        color_detection(image)
+        [object_color,object_pos]=color_detection(image)
+        print(object_color)
     else:
         print("NO OBJECT DETECTED")
         tbot.fill_underlighting(BLACK)   
