@@ -110,7 +110,7 @@ def color_detection(image):
     print("color_det",color_det)
     print("M",M00)
     unknown_color=True
-    for i in range(3):
+    for i in range(4):
         if color_det[i]==True:
             if unknown_color==True:
                 index=i
