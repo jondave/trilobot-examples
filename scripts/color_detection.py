@@ -89,7 +89,7 @@ def color_detection(image):
     [color_det_g,M_g]=check_color(mask_g,h,w)
     [color_det_b,M_b]=check_color(mask_b,h,w)
     
-    color_det=[colot_det_r,colot_det_y,colot_det_g,colot_det_b]
+    color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M00=[M_r['m00'],M_y['m00'],M_g['m00'],M_b['m00']]
     index=0
     no_color=True
