@@ -47,7 +47,8 @@ def detect_faces():
     image = cv2.imdecode(buff, 1)
 
     # import the cascade file - needs to be in the same folder
-    face_cascade = cv2.CascadeClassifier('~/trilobot-examples/config/haarcascade_frontalface_default.xml')
+    #face_cascade = cv2.CascadeClassifier('~/trilobot-examples/config/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
     # convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
