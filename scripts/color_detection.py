@@ -1,3 +1,7 @@
+# This script uses the camera mounted on the trilobot to detect the color of an object in the center of the image. 
+# The object has to be detected within an specific distance in order to make the robot start running the color detection.
+# If the object in front of the robot has a known color, then the LEDs are turned on using the same color, otherwise they are turned off.
+
 import io
 import picamera
 import cv2
@@ -81,49 +85,43 @@ def color_detection(image):
     mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
     ## mask of blue 
     mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-
+    ## Masking
     h, w, d = image.shape
-
     [color_det_r,M_r]=check_color(mask_r,h,w)
     [color_det_y,M_y]=check_color(mask_y,h,w)
     [color_det_g,M_g]=check_color(mask_g,h,w)
     [color_det_b,M_b]=check_color(mask_b,h,w)
-    
+    ## Detecting the color (R,Y,G,B) of an object in front of the robot 
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M=[M_r,M_y,M_g,M_b]
-    print("color_det",color_det)
     unknown_color=True
     for i in range(4):
+        # Is the object of a known color?
         if color_det[i]==True:
             if unknown_color==True:
                 index=i
                 unknown_color=False
                 object_pos_index=locate_color(M[index],w,h)
             object_pos=locate_color(M[i],w,h)
+            # To prioritize the object located at the center of the image
             if (abs(object_pos[2])+abs(object_pos[3])) < (abs(object_pos_index[2])+abs(object_pos_index[3])):
                 index=i
                 object_pos_index=locate_color(M[index],w,h)
     if unknown_color==False:
-        print("Index",index)
         if index==0:
             object_color="RED OBJECT"
-            #object_pos=locate_color(M_r,w,h)
             tbot.fill_underlighting(RED)
         elif index==1:
             object_color="YELLOW OBJECT"
-            #object_pos=locate_color(M_y,w,h)
             tbot.fill_underlighting(YELLOW)
         elif index==2:
             object_color="GREEN OBJECT"
-            #object_pos=locate_color(M_g,w,h)
             tbot.fill_underlighting(GREEN)
         elif index==3:
             object_color="BLUE OBJECT"
-            #object_pos=locate_color(M_b,w,h)
             tbot.fill_underlighting(BLUE)
     else:
         object_color="UNKNOWN COLOR"
-        #object_pos=[0,0,0,0]
         tbot.fill_underlighting(BLACK)    
         
     return object_color 
