@@ -63,13 +63,13 @@ def color_detection(image):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    ## mask of red (15,0,0) ~ (36, 255, 255)
+    ## mask of red 
     mask_r = cv2.inRange(hsv, (2,0,0), (10, 255, 255))
-    ## mask of yellow (15,0,0) ~ (36, 255, 255)
+    ## mask of yellow 
     mask_y = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
-    ## mask of green (36,0,0) ~ (70, 255,255)
+    ## mask of green 
     mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
-    ## mask of blue (15,0,0) ~ (36, 255, 255)
+    ## mask of blue 
     mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
 
     ## final mask and masked
