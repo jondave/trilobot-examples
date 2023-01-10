@@ -80,7 +80,9 @@ def color_detection(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     ## mask of red 
-    mask_r = cv2.inRange(hsv, (2,0,0), (10, 255, 255))
+    mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
+    mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
+    mask_r=cv2.bitwise_or(mask_r_lower, mask_r_upper)
     ## mask of yellow 
     mask_y = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
     ## mask of green 
@@ -116,6 +118,7 @@ def color_detection(image):
             if M00[i] < M00[index]:
                 index=i
     if unknown_color==False:
+        print("Index",index)
         if index==0:
             object_color="RED OBJECT"
             object_pos=locate_color(M_r,w,image)
