@@ -117,7 +117,7 @@ def color_detection(image):
             tbot.fill_underlighting(BLUE)
     else:
         print("NO COLOR")
-        tbot.fill_underlighting(BLUE)    
+        tbot.fill_underlighting(BLACK)    
         
     '''
     if color_det_r==True:
@@ -147,7 +147,7 @@ def color_detection(image):
                     tbot.fill_underlighting(BLUE)
                 else: #no color
                     print("NO COLOR")
-                    tbot.fill_underlighting(BLUE)            
+                    tbot.fill_underlighting(BLACK)            
        '''                 
 while True or KeyboardInterrupt:
     image=capture_image()
