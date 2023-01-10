@@ -103,15 +103,15 @@ def color_detection(image):
             print("RED")
             locate_color(M_r,w,image)
             tbot.fill_underlighting(RED)
-         elif index==1:
+        elif index==1:
             print("YELLOW")
             locate_color(M_y,w,image)
             tbot.fill_underlighting(YELLOW)
-          elif index==2:
+        elif index==2:
             print("GREEN")
             locate_color(M_g,w,image)
             tbot.fill_underlighting(GREEN)
-          elif index==3:
+        elif index==3:
             print("BLUE")
             locate_color(M_b,w,image)
             tbot.fill_underlighting(BLUE)
