@@ -114,6 +114,7 @@ def color_detection(image):
             no_color=False
             if M00[i] < M00[index]:
                 index=i
+    print("index",index)
     if no_color==False:
         if index==0:
             print("RED")
