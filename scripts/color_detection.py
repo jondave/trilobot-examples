@@ -92,7 +92,6 @@ def color_detection(image):
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M=[M_r,M_y,M_g,M_b]
     print("color_det",color_det)
-    print("M",M00)
     unknown_color=True
     for i in range(4):
         if color_det[i]==True:
