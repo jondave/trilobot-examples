@@ -7,7 +7,7 @@ from trilobot import *
 # create the robot object
 tbot = Trilobot()
 
-# Colors codes
+# RGB Colors
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
@@ -75,17 +75,52 @@ def color_detection(image):
     ## final mask and masked
     #mask = cv2.bitwise_or(mask1, mask2)
     #target = cv2.bitwise_and(img,img, mask=mask)
-    cv2.imwrite("mask_g.png", mask_g)
-    cv2.imwrite("mask_y.png", mask_y)
-    cv2.imwrite("mask_r.png", mask_r)
-    cv2.imwrite("mask_b.png", mask_b)
+    #cv2.imwrite("mask_g.png", mask_g)
+    #cv2.imwrite("mask_y.png", mask_y)
+    #cv2.imwrite("mask_r.png", mask_r)
+    #cv2.imwrite("mask_b.png", mask_b)
 
     h, w, d = image.shape
 
     color_det=False
     mask=mask_r
-    [color_det,M]=check_color(mask,h,w)
-    if color_det==True:
+    [color_det_r,M_r]=check_color(mask_r,h,w)
+    [color_det_y,M_y]=check_color(mask_y,h,w)
+    [color_det_g,M_g]=check_color(mask_g,h,w)
+    [color_det_b,M_b]=check_color(mask_b,h,w)
+    
+    color_det=[colot_det_r,colot_det_y,colot_det_g,colot_det_b]
+    M00=[M_r['m00'],M_y['m00'],M_g['m00'],M_b['m00']]
+    index=0
+    no_color=True
+    for i in range(3):
+        if color_det[i]==True:
+            no_color_False
+            if M00[i] > M00[index]:
+                index=i
+    if no_color==False:
+        if index==0:
+            print("RED")
+            locate_color(M_r,w,image)
+            tbot.fill_underlighting(RED)
+         elif index==1:
+            print("YELLOW")
+            locate_color(M_y,w,image)
+            tbot.fill_underlighting(YELLOW)
+          elif index==2:
+            print("GREEN")
+            locate_color(M_g,w,image)
+            tbot.fill_underlighting(GREEN)
+          elif index==3:
+            print("BLUE")
+            locate_color(M_b,w,image)
+            tbot.fill_underlighting(BLUE)
+    else:
+        print("NO COLOR")
+        tbot.fill_underlighting(BLUE)    
+        
+    '''
+    if color_det_r==True:
         print("RED")
         locate_color(M,w,image)
         tbot.fill_underlighting(RED)
@@ -113,7 +148,7 @@ def color_detection(image):
                 else: #no color
                     print("NO COLOR")
                     tbot.fill_underlighting(BLUE)            
-                        
+       '''                 
 while True or KeyboardInterrupt:
     image=capture_image()
     color_detection(image)
