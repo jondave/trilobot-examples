@@ -1,6 +1,7 @@
+# This script uses the camera mounted on the trilobot to detect and count the number of faces in the image. 
+# When the robot is detecting faces, the LEDs are activated in green color, otherwise they are blue.
 # This code was taken from https://github.com/kevinmcaleer/companion_bot.git
 
-import io
 import picamera
 import cv2
 import numpy
@@ -33,18 +34,12 @@ def blue_light():
     tbot.show_underlighting()
 
 def detect_faces():
-    stream = io.BytesIO()
-
-    # capture an image
+    #Capture image
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
-        camera.capture(stream, format='jpeg')
-
-    # create an image buffer
-    buff = numpy.frombuffer(stream.getvalue(), dtype=numpy.uint8)
-
-    # assign the image from the cv2 buffer
-    image = cv2.imdecode(buff, 1)
+        image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
+        camera.capture(image, 'bgr')
+        image = image.reshape((240, 320, 3))
 
     # import the cascade file - needs to be in the same folder
     #face_cascade = cv2.CascadeClassifier('~/trilobot-examples/config/haarcascade_frontalface_default.xml')
@@ -63,13 +58,6 @@ def detect_faces():
         blue_light()
     return faces, image
    
-def write_file(faces, image, filename):
-    # write file
-    for (x,y,w,h) in faces:
-        cv2.rectangle(image, (x,y), (x+w,y+h),(255,255,0),4)
-
-    cv2.imwrite(filename, image)
-
 while True or KeyboardInterrupt:
     faces, image = detect_faces()
-    # write_file(faces, image, filaneme='result.jpg')
+    
