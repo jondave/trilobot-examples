@@ -15,8 +15,8 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 def distance_detection():
-    # Take 2 measurements rapidly
-    for i in range(2):
+    # Take 3 measurements rapidly
+    for i in range(3):
         clock_check = time.perf_counter()
         distance = tbot.read_distance(timeout=25, samples=3)
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
@@ -42,8 +42,8 @@ def circle_detection(image):
     gray_blurred = cv2.blur(gray, (3, 3))
     # Apply Hough transform on the blurred image.
     detected_circles = cv2.HoughCircles(gray_blurred, 
-                       cv2.HOUGH_GRADIENT, 1, 20, param1 = 50,
-                   param2 = 50, minRadius = 0, maxRadius = 0)
+                       cv2.HOUGH_GRADIENT, 1, 20, param1 = 10,
+                   param2 = 10, minRadius = 0, maxRadius = 0)
     # Count and locate the circles that are detected.
     x=[] # list with x component of the circles detected
     y=[] # list with y component of the circles detected
@@ -63,11 +63,6 @@ def circle_detection(image):
     return num_circles,x,y,r
         
 while True or KeyboardInterrupt:
-    image=capture_image()
-    num_balls=circle_detection(image)
-    print("NUMBER OF BALLS:",num_balls[0])
-    
-    '''
     distance=distance_detection()
     if distance<50: #50cm threshold
         image=capture_image()
@@ -76,4 +71,4 @@ while True or KeyboardInterrupt:
     else:
         print("NO BALLS DETECTED")
         tbot.fill_underlighting(BLACK) 
-    '''
+    
