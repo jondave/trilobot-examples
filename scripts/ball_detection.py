@@ -22,19 +22,10 @@ def distance_detection():
         distance = tbot.read_distance(timeout=25, samples=3)
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
         time.sleep(0.01)
-    # Take 10 measurements allowing longer time for measuring greater distances
-    '''
-    for i in range(10):
-        clock_check = time.perf_counter()
-        distance = tbot.read_distance(timeout=200, samples=9)
-        #print("Slower: Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
-        time.sleep(0.01)
-    '''
+    
     return distance
 
 def capture_image():
-    # stream = io.BytesIO()
-    # capture an image
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
         camera.framerate = 24
@@ -42,15 +33,7 @@ def capture_image():
         image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
-    '''
-        camera.resolution = (320, 240)
-        camera.framerate = 24
-        camera.capture(stream, format='jpeg')
-    # create an image buffer
-    buff = numpy.frombuffer(stream.getvalue(), dtype=numpy.uint8)
-    # assign the image from the cv2 buffer
-    image = cv2.imdecode(buff, 1) 
-    '''
+    
     return image
   
 def circle_detection(image):  
