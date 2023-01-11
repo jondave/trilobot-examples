@@ -61,9 +61,9 @@ def circle_detection(image):
         # Convert the circle parameters x, y and r to integers.
         detected_circles = numpy.uint16(numpy.around(detected_circles))
         for pt in detected_circles[0,:]:
-            x.append[pt[0]]
-            y.append[pt[1]]
-            r.append[pt[2]]
+            x.append(pt[0])
+            y.append(pt[1])
+            r.append(pt[2])
     else:
         num_circles=0
         tbot.fill_underlighting(BLACK)
