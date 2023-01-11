@@ -51,13 +51,13 @@ def circle_detection(image):
     detected_circles = cv2.HoughCircles(gray_blurred, 
                        cv2.HOUGH_GRADIENT, 1, 20, param1 = 100,
                    param2 = 50, minRadius = 0, maxRadius = 0)
-    # Draw circles that are detected.
+    # Count and locate the circles that are detected.
+    x=[] # list with x component of the circles detected
+    y=[] # list with y component of the circles detected
+    r=[] # list with the radius of the circles detected
     if detected_circles is not None:
         tbot.fill_underlighting(RED)
         num_circles=len(detected_circles[0,:,0])  
-        x=[] # list with x component of the circles detected
-        y=[] # list with y component of the circles detected
-        r=[] # list with the radius of the circles detected
         # Convert the circle parameters x, y and r to integers.
         detected_circles = numpy.uint16(numpy.around(detected_circles))
         for pt in detected_circles[0,:]:
