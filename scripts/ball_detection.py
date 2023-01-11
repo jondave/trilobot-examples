@@ -27,7 +27,7 @@ def distance_detection():
 def capture_image():
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
-        camera.framerate = 24
+        #camera.framerate = 24
         #time.sleep(2)
         image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
@@ -66,8 +66,9 @@ while True or KeyboardInterrupt:
     distance=distance_detection()
     if distance<50: #50cm threshold
         image=capture_image()
-        num_balls=circle_detection(image)
-        print("NUMBER OF BALLS:",num_balls[0])
+        #num_balls=circle_detection(image)
+        #print("NUMBER OF BALLS:",num_balls[0])
+        print("HOLA")
     else:
         print("NO BALLS DETECTED")
         tbot.fill_underlighting(BLACK) 
