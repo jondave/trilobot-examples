@@ -35,6 +35,7 @@ def capture_image():
     # capture an image
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
+        camera.framerate = 24
         camera.capture(stream, format='jpeg')
     # create an image buffer
     buff = numpy.frombuffer(stream.getvalue(), dtype=numpy.uint8)
@@ -71,7 +72,7 @@ def circle_detection(image):
         
 while True or KeyboardInterrupt:
     distance=distance_detection()
-    if distance<30: #30cm threshold
+    if distance<50: #50cm threshold
         image=capture_image()
         num_balls=circle_detection(image)
         print("NUMBER OF BALLS:",num_balls)
