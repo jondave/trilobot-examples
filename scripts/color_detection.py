@@ -2,7 +2,6 @@
 # The object has to be detected within an specific distance in order to make the robot start running the color detection.
 # If the object in front of the robot has a known color, then the LEDs are turned on using the same color, otherwise they are turned off.
 
-import io
 import picamera
 import cv2
 import numpy
@@ -20,30 +19,22 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 def distance_detection():
-    # Take 10 measurements rapidly
-    for i in range(10):
+    # Take 3 measurements rapidly
+    for i in range(3):
         clock_check = time.perf_counter()
         distance = tbot.read_distance(timeout=25, samples=3)
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
         time.sleep(0.01)
-    # Take 10 measurements allowing longer time for measuring greater distances
-    for i in range(10):
-        clock_check = time.perf_counter()
-        distance = tbot.read_distance(timeout=200, samples=9)
-        #print("Slower: Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
-        time.sleep(0.01)
+   
     return distance
 
 def capture_image():
-    stream = io.BytesIO()
-    # capture an image
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
-        camera.capture(stream, format='jpeg')
-    # create an image buffer
-    buff = numpy.frombuffer(stream.getvalue(), dtype=numpy.uint8)
-    # assign the image from the cv2 buffer
-    image = cv2.imdecode(buff, 1) 
+        image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
+        camera.capture(image, 'bgr')
+        image = image.reshape((240, 320, 3))
+        
     return image
   
 def check_color(mask,h,w):
