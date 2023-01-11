@@ -31,9 +31,16 @@ def distance_detection():
     return distance
 
 def capture_image():
-    stream = io.BytesIO()
+    # stream = io.BytesIO()
     # capture an image
     with picamera.PiCamera() as camera:
+        camera.resolution = (320, 240)
+        camera.framerate = 24
+        time.sleep(2)
+        image = np.empty((240 * 320 * 3,), dtype=np.uint8)
+        camera.capture(image, 'bgr')
+        image = image.reshape((240, 320, 3))
+    '''
         camera.resolution = (320, 240)
         camera.framerate = 24
         camera.capture(stream, format='jpeg')
@@ -41,6 +48,7 @@ def capture_image():
     buff = numpy.frombuffer(stream.getvalue(), dtype=numpy.uint8)
     # assign the image from the cv2 buffer
     image = cv2.imdecode(buff, 1) 
+    '''
     return image
   
 def circle_detection(image):  
