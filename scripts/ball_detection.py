@@ -15,8 +15,8 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 def distance_detection():
-    # Take 5 measurements rapidly
-    for i in range(5):
+    # Take 2 measurements rapidly
+    for i in range(2):
         clock_check = time.perf_counter()
         distance = tbot.read_distance(timeout=25, samples=3)
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
@@ -63,6 +63,11 @@ def circle_detection(image):
     return num_circles,x,y,r
         
 while True or KeyboardInterrupt:
+    image=capture_image()
+    num_balls=circle_detection(image)
+    print("NUMBER OF BALLS:",num_balls[0])
+    
+    '''
     distance=distance_detection()
     if distance<50: #50cm threshold
         image=capture_image()
@@ -71,3 +76,4 @@ while True or KeyboardInterrupt:
     else:
         print("NO BALLS DETECTED")
         tbot.fill_underlighting(BLACK) 
+    '''
