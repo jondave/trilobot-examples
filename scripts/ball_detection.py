@@ -16,8 +16,8 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 def distance_detection():
-    # Take 10 measurements rapidly
-    for i in range(10):
+    # Take 5 measurements rapidly
+    for i in range(5):
         clock_check = time.perf_counter()
         distance = tbot.read_distance(timeout=25, samples=3)
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
@@ -39,7 +39,7 @@ def capture_image():
         camera.resolution = (320, 240)
         camera.framerate = 24
         time.sleep(2)
-        image = numpy.empty((240 * 320 * 3,), dtype=np.uint8)
+        image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
     '''
