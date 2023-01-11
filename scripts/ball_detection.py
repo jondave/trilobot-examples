@@ -23,11 +23,13 @@ def distance_detection():
         #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
         time.sleep(0.01)
     # Take 10 measurements allowing longer time for measuring greater distances
+    '''
     for i in range(10):
         clock_check = time.perf_counter()
         distance = tbot.read_distance(timeout=200, samples=9)
         #print("Slower: Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
         time.sleep(0.01)
+    '''
     return distance
 
 def capture_image():
@@ -37,7 +39,7 @@ def capture_image():
         camera.resolution = (320, 240)
         camera.framerate = 24
         time.sleep(2)
-        image = np.empty((240 * 320 * 3,), dtype=np.uint8)
+        image = numpy.empty((240 * 320 * 3,), dtype=np.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
     '''
