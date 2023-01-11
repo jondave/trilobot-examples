@@ -1,3 +1,7 @@
+# This script uses the camera mounted on the trilobot to detect and count the number of balls in the image. 
+# The ball detection is activated when an object is detected within a specific distance.
+# When the robot is detecting balls, the LEDs are activated in red color, otherwise they are turned off.
+
 import picamera
 import cv2
 import numpy
