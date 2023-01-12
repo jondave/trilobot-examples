@@ -1,4 +1,4 @@
-# This script uses the camera mounted on the trilobot to detect and locate balls in the image. 
+# This script uses the camera mounted on the trilobot to detect and locate balls of different colors in the image. 
 # The location of the ball with a specific color (defined by the user) in the image is used to make 
 # the robot move in a way that this ball stays detected in the center of the image.
 # When the robot detects a ball with a specific color wanted, the LEDs are activated in that color, otherwise they are turned off.
@@ -19,15 +19,8 @@ CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
-def distance_detection():
-    # Take 3 measurements rapidly
-    for i in range(3):
-        clock_check = time.perf_counter()
-        distance = tbot.read_distance(timeout=25, samples=3)
-        #print("Rapid:  Distance is {:.1f} cm (took {:.4f} sec)".format(distance, (time.perf_counter() - clock_check)))
-        time.sleep(0.01)
-    
-    return distance
+# Color wanted to be tracked
+color_wanted="RED" # it can be "RED", "YELLOW", "GREEN", "BLUE"
 
 def capture_image():
     with picamera.PiCamera() as camera:
@@ -64,13 +57,84 @@ def circle_detection(image):
         num_circles=0
         tbot.fill_underlighting(BLACK)
     return num_circles,x,y,r
-        
-while True or KeyboardInterrupt:
-    distance=distance_detection()
-    if distance<50: #50cm threshold
-        image=capture_image()
-        num_balls=circle_detection(image)
-        print("NUMBER OF BALLS:",num_balls[0])
+
+def check_color(mask,h,w,x,y,r):
+    
+    search_top = int(y - r)
+    search_bot = int(y + r)
+    search_left = int(x - r)
+    search_right = int(x + r)
+    mask[0:search_top, 0:w] = 0
+    mask[search_bot:h, 0:w] = 0
+    mask[0:h, 0:search_left] = 0
+    mask[0:h, search_right:w] = 0
+    
+    M = cv2.moments(mask)
+    if M['m00'] > 0:
+        color_det=True
     else:
-        print("NO BALLS DETECTED")
-        tbot.fill_underlighting(BLACK) 
+        color_det=False
+    return color_det,[M['m00'],M['m10'],M['m01']]
+
+def color_detection(image,color_wanted,x,y,r):
+    ## convert to hsv
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
+    if color_wanted=="RED":
+        ## mask of red 
+        mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
+        mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
+        mask=cv2.bitwise_or(mask_r_lower, mask_r_upper)
+    elif color_wanted=="YELLOW":
+        ## mask of yellow 
+        mask = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
+    elif color_wanted=="GREEN":
+        ## mask of green 
+        mask = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
+    elif color_wanted=="BLUE":
+        ## mask of blue 
+        mask = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
+    
+    ## Masking
+    h, w, d = image.shape
+    color_detected=False
+    index=[]
+    for i in range(len(x)):
+        color_detected=check_color(mask,h,w,x[i],y[i],r[i])
+        if color_detected==True
+            index=i
+            break
+    return color_detected,index,w
+
+def activate_leds(color_wanted):
+    if color_wanted=="RED":
+        tbot.fill_underlighting(RED)
+    elif color_wanted=="YELLOW":
+        tbot.fill_underlighting(YELLOW)
+    elif color_wanted=="GREEN":
+        tbot.fill_underlighting(GREEN)
+    elif color_wanted=="BLUE":
+        tbot.fill_underlighting(BLUE)   
+
+def ball_tracking(x,w):
+    err_x = x - w/2
+    vel = 0.15*(-float(err_x) / 100)
+    tbot.set_motor_speeds(vel, -vel)
+              
+while True or KeyboardInterrupt:
+    image=capture_image()
+    [num_balls,x,y,r]=circle_detection(image)
+    if numb_balls>0:
+        [color_detected,ball_index,w]=color_detection(image,color_wanted,x,y,r)
+        if color_detected==True:
+            print("NUMBER OF BALLS:",num_balls[0],"TRACKING ",color_wanted)
+            ball_tracking(x[ball_index],w) 
+            activate_leds(color_wanted)            
+        else:
+            print("NUMBER OF BALLS:",num_balls[0])
+            tbot.fill_underlighting(BLACK)  
+            tbot.disable_motors()
+    else:
+        print("NUMBER OF BALLS:",num_balls[0])
+        tbot.fill_underlighting(BLACK)  
+        tbot.disable_motors()
