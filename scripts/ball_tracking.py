@@ -1,6 +1,6 @@
 # This script uses the camera mounted on the trilobot to detect and locate balls of different colors in the image. 
 # The location of the ball with a specific color (defined by the user) in the image is used to make 
-# the robot move in a way that this ball stays detected in the center of the image.
+# the robot rotate in a way that the ball stays detected in the center of the image.
 # When the robot detects a ball with a specific color wanted, the LEDs are activated in that color, otherwise they are turned off.
 
 import picamera
