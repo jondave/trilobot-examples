@@ -118,8 +118,11 @@ def activate_leds(color_wanted):
 def ball_tracking(x,w):
     err_x = x - w/2
     vel = 0.5*(-float(err_x) / 100)
-    print("VELOCITY",vel)  
-    tbot.set_motor_speeds(vel, -vel)
+    print("VELOCITY",vel)
+    if vel<0.1:
+        tbot.disable_motors()
+    else:
+        tbot.set_motor_speeds(vel, -vel)
               
 while True or KeyboardInterrupt:
     image=capture_image()
