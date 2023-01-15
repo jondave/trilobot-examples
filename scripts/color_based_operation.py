@@ -1,7 +1,9 @@
 # This script uses the camera mounted on the trilobot to detect and locate and determine the color of circles/balls in the image. 
-#  The color of the circle/ball defines what action the robot must do including 1) staying stationary 2) moving forwards for 3 seconds 
-# 3) rotating 90 degrees clockwise and 4) adjusting the robot orientation to keep the circle/ball always detected in the center of the image.
-# When the robot detects a circle/ball with a specific color, the LEDs are activated in that color, otherwise they are turned off.
+# The color of the circle/ball defines what action the robot must do including 1) moving forwards for 3 seconds 2) moving while creating a 
+# square shape path 3) moving while creating a circular shape path 4) adjusting the robot orientation to keep the circle/ball always detected 
+# in the center of the image.
+# When the robot detects a circle/ball with a specific color, the LEDs keep activated in that color while the robot performs the specific action
+# otherwise they are turned off.
 
 import picamera
 import cv2
@@ -19,17 +21,15 @@ CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
-# Color wanted to be tracked
-color_wanted="RED" # it can be "RED", "YELLOW", "GREEN", "BLUE"
-
 def capture_image():
     with picamera.PiCamera() as camera:
         camera.resolution = (320, 240)
         image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
-    
-    return image
+        h, w, d = image.shape
+        
+    return image,w
   
 def circle_detection(image):  
     # Convert to grayscale.
@@ -76,27 +76,30 @@ def check_color(mask,h,w,x,y,r):
         color_det=False
     return color_det,[M['m00'],M['m10'],M['m01']]
 
-def color_detection(image,color_wanted,x,y,r):
+def color_detection(image,x,y,r):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     
-    if color_wanted=="RED":
-        ## mask of red 
-        mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
-        mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
-        mask=cv2.bitwise_or(mask_r_lower, mask_r_upper)
-    elif color_wanted=="YELLOW":
-        ## mask of yellow 
-        mask = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
-    elif color_wanted=="GREEN":
-        ## mask of green 
-        mask = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
-    elif color_wanted=="BLUE":
-        ## mask of blue 
-        mask = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-    
+    ## mask of red 
+    mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
+    mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
+    mask_r=cv2.bitwise_or(mask_r_lower, mask_r_upper)
+    ## mask of yellow 
+    mask_y = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
+    ## mask of green 
+    mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
+    ## mask of blue 
+    mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
     ## Masking
     h, w, d = image.shape
+    [color_det_r,M_r]=check_color(mask_r,h,w,x[i],y[i],r[i])
+    [color_det_y,M_y]=check_color(mask_y,h,w)
+    [color_det_g,M_g]=check_color(mask_g,h,w)
+    [color_det_b,M_b]=check_color(mask_b,h,w)
+    ## Detecting the color (R,Y,G,B) of an object in front of the robot 
+    color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
+    M=[M_r,M_y,M_g,M_b]
+    
     color_detected=False
     index=[]
     for i in range(len(x)):
@@ -104,37 +107,63 @@ def color_detection(image,color_wanted,x,y,r):
         if color_detected==True
             index=i
             break
-    return color_detected,index,w
+    return color_detected,index
 
-def activate_leds(color_wanted):
-    if color_wanted=="RED":
+############################################################################################################## 
+#### TO BE COMPLETED #########################################################################################
+def action_planner(color,width,x_pos):
+    # This function needs to return the string variable named "robot_action" as follows:
+    # if color="RED" then robot_action="MOVING FORWARD FOR 3 SECONDS"
+    # if color="YELLOW then robot_action="FOLLOWING A SQUARE PATH"
+    # if color="GREEN" then robot_action="FOLLOWING A CIRCULAR PATH"
+    # if color="BLUE" then robot_action="TRACKING THE BALL", this will require to use variables "width" and "x_pos" 
+    # Remember to activate the LEDs with the corresponding color while the robot is performing an action.
+    activate_leds(color)
+    if color=="RED":
+        #Something here .......
+        robot_action="MOVING FORWARD FOR 3 SECONDS"      
+    elif color=="YELLOW"
+        #Something here .......
+        robot_action="FOLLOWING A SQUARE PATH"
+    elif color=="GREEN":
+        #Something here .......
+        robot_action="FOLLOWING A CIRCULAR PATH"
+    elif color=="BLUE":
+        #Something here .......
+        #This will require to use variables "width" and "x_pos" 
+        robot_action="TRACKING THE BALL"
+        
+    return robot_action
+
+def activate_leds(color):
+    if color=="RED":
         tbot.fill_underlighting(RED)
-    elif color_wanted=="YELLOW":
+    elif color=="YELLOW":
         tbot.fill_underlighting(YELLOW)
-    elif color_wanted=="GREEN":
+    elif color=="GREEN":
         tbot.fill_underlighting(GREEN)
-    elif color_wanted=="BLUE":
+    elif color=="BLUE":
         tbot.fill_underlighting(BLUE)   
+##############################################################################################################    
+##############################################################################################################
 
-def ball_tracking(x,w):
-    err_x = x - w/2
-    vel = 0.15*(-float(err_x) / 100)
-    tbot.set_motor_speeds(vel, -vel)
-              
 while True or KeyboardInterrupt:
-    image=capture_image()
-    [num_balls,x,y,r]=circle_detection(image)
+    [image,width]=capture_image()
+    [num_balls,x_pos,y_pos,radius]=circle_detection(image)
     if numb_balls>0:
-        [color_detected,ball_index,w]=color_detection(image,color_wanted,x,y,r)
-        if color_detected==True:
-            print("NUMBER OF BALLS:",num_balls[0],"TRACKING ",color_wanted)
-            ball_tracking(x[ball_index],w) 
-            activate_leds(color_wanted)            
+        [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
+        if ball_color!="UNKNOWN":
+            #######################################################################################################################
+            #### TO BE COMPLETED ##################################################################################################
+            robot_action=action_planner(color_detected,x_pos,width)            
+            #######################################################################################################################
+            #######################################################################################################################
+            print("ACTION: ",robot_action)                         
         else:
-            print("NUMBER OF BALLS:",num_balls[0])
+            print("ACTION: ",ball_color) 
             tbot.fill_underlighting(BLACK)  
             tbot.disable_motors()
     else:
-        print("NUMBER OF BALLS:",num_balls[0])
+        print("NO BALLS DETECTED")
         tbot.fill_underlighting(BLACK)  
         tbot.disable_motors()
