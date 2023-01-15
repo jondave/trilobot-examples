@@ -55,7 +55,6 @@ def circle_detection(image):
             r.append(pt[2])
     else:
         num_circles=0
-        tbot.fill_underlighting(BLACK)
     return num_circles,x,y,r
 
 def check_color(mask,h,w,x,y,r):
