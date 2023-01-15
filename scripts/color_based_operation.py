@@ -103,8 +103,8 @@ def color_detection(image,x,y,r):
     [color_det_b,M_b]=check_color(mask_b,h,w,x[circle_index],y[circle_index],r[circle_index])       
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M=[M_r,M_y,M_g,M_b]
+    print(color_det_r,color_det_y,color_det_g,color_det_b)
     print(color_det)
-    print(M)
     unknown_color=True
     for j in range(4):
         # Is the ball of a known color?
