@@ -45,7 +45,6 @@ def circle_detection(image):
     y=[] # list with y component of the circles detected
     r=[] # list with the radius of the circles detected
     if detected_circles is not None:
-        tbot.fill_underlighting(RED)
         num_circles=len(detected_circles[0,:,0])  
         # Convert the circle parameters x, y and r to integers.
         detected_circles = numpy.uint16(numpy.around(detected_circles))
