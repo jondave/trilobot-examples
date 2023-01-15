@@ -92,26 +92,45 @@ def color_detection(image,x,y,r):
     mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
     ## Masking
     h, w, d = image.shape
-    [color_det_r,M_r]=check_color(mask_r,h,w,x[i],y[i],r[i])
-    [color_det_y,M_y]=check_color(mask_y,h,w)
-    [color_det_g,M_g]=check_color(mask_g,h,w)
-    [color_det_b,M_b]=check_color(mask_b,h,w)
-    ## Detecting the color (R,Y,G,B) of an object in front of the robot 
+   
+    ## Selecting the biggest ball detected
+    circle_index=0
+    for i in range(len(x)):
+        if r[i]>=r[circle_index]:
+            circle_index=i
+    ## Detecting the color (R,Y,G,B) of the ball          
+    [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_g,M_g]=check_color(mask_g,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_b,M_b]=check_color(mask_b,h,w,x[circle_index],y[circle_index],r[circle_index])       
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M=[M_r,M_y,M_g,M_b]
-    
-    color_detected=False
-    index=[]
-    for i in range(len(x)):
-        color_detected=check_color(mask,h,w,x[i],y[i],r[i])
-        if color_detected==True
-            index=i
-            break
-    return color_detected,index
+    unknown_color=True
+    for j in range(4):
+        # Is the ball of a known color?
+        if color_det[j]==True:
+            if unknown_color==True:
+                color_index=j
+                unknown_color=False
+            # To prioritize the color detected with smaller M
+            if M[j]<M[color_index]:
+                color_index=j
+    if unknown_color==False:
+        if color_index==0:
+            object_color="RED"
+        elif color_index==1:
+            object_color="YELLOW"
+        elif color_index==2:
+            object_color="GREEN"
+        elif color_index==3:
+            object_color="BLUE"
+    else:
+        object_color="UNKNOWN"
+    return object_color,x[circle_index]
 
 ############################################################################################################## 
 #### TO BE COMPLETED #########################################################################################
-def action_planner(color,width,x_pos):
+def action_planner(color,x_pos,width):
     # This function needs to return the string variable named "robot_action" as follows:
     # if color="RED" then robot_action="MOVING FORWARD FOR 3 SECONDS"
     # if color="YELLOW then robot_action="FOLLOWING A SQUARE PATH"
@@ -155,7 +174,7 @@ while True or KeyboardInterrupt:
         if ball_color!="UNKNOWN":
             #######################################################################################################################
             #### TO BE COMPLETED ##################################################################################################
-            robot_action=action_planner(color_detected,x_pos,width)            
+            robot_action=action_planner(ball_color,ball_pos_x,width)            
             #######################################################################################################################
             #######################################################################################################################
             print("ACTION: ",robot_action)                         
