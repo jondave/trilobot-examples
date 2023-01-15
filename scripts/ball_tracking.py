@@ -100,6 +100,7 @@ def color_detection(image,color_wanted,x,y,r):
     index=[]
     for i in range(len(x)):
         color_detected=check_color(mask,h,w,x[i],y[i],r[i])
+        print(color_detected,i)
         if color_detected==True:
             index=i
             break
