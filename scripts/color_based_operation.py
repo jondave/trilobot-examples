@@ -141,7 +141,7 @@ def action_planner(color,x_pos,width):
     if color=="RED":
         #Something here .......
         robot_action="MOVING FORWARD FOR 3 SECONDS"      
-    elif color=="YELLOW"
+    elif color=="YELLOW":
         #Something here .......
         robot_action="FOLLOWING A SQUARE PATH"
     elif color=="GREEN":
