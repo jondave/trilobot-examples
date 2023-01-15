@@ -127,14 +127,14 @@ while True or KeyboardInterrupt:
     if num_balls>0:
         [color_detected,ball_index,w]=color_detection(image,color_wanted,x,y,r)
         if color_detected==True:
-            print("NUMBER OF BALLS:",num_balls[0],"TRACKING ",color_wanted)
+            print("NUMBER OF BALLS:",num_balls,"TRACKING ",color_wanted)
             ball_tracking(x[ball_index],w) 
             activate_leds(color_wanted)            
         else:
-            print("NUMBER OF BALLS:",num_balls[0])
+            print("NUMBER OF BALLS:",num_balls)
             tbot.fill_underlighting(BLACK)  
             tbot.disable_motors()
     else:
-        print("NUMBER OF BALLS:",num_balls[0])
+        print("NUMBER OF BALLS:",num_balls)
         tbot.fill_underlighting(BLACK)  
         tbot.disable_motors()
