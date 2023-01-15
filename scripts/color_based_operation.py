@@ -169,7 +169,7 @@ def activate_leds(color):
 while True or KeyboardInterrupt:
     [image,width]=capture_image()
     [num_balls,x_pos,y_pos,radius]=circle_detection(image)
-    if numb_balls>0:
+    if num_balls>0:
         [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
         if ball_color!="UNKNOWN":
             #######################################################################################################################
