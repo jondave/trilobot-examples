@@ -124,7 +124,7 @@ def ball_tracking(x,w):
 while True or KeyboardInterrupt:
     image=capture_image()
     [num_balls,x,y,r]=circle_detection(image)
-    if numb_balls>0:
+    if num_balls>0:
         [color_detected,ball_index,w]=color_detection(image,color_wanted,x,y,r)
         if color_detected==True:
             print("NUMBER OF BALLS:",num_balls[0],"TRACKING ",color_wanted)
