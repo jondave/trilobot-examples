@@ -75,30 +75,34 @@ def check_color(mask,h,w,x,y,r):
     return color_det,[M['m00'],M['m10'],M['m01']]
 
 def color_detection(image,x,y,r):
+            
+    ## convert to hsv
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    ## mask of red 
+    mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
+    mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
+    mask_r=cv2.bitwise_or(mask_r_lower, mask_r_upper)
+    ## mask of yellow 
+    mask_y = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
+    ## mask of green 
+    mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
+    ## mask of blue 
+    mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
+    if mask_r==mask_b or mask_r==mask_y or mask_r==mask_g:
+        print("ERROR")
+    h, w, d = image.shape
+    
     ## Selecting the biggest ball detected
     circle_index=0
     for i in range(len(x)):
         if r[i]>=r[circle_index]:
             circle_index=i
-            
-    ## convert to hsv
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
     ## Masking
-    h, w, d = image.shape
-    ## mask of red 
-    mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
-    mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
-    mask=cv2.bitwise_or(mask_r_lower, mask_r_upper)
-    [color_det_r,M_r]=check_color(mask,h,w,x[circle_index],y[circle_index],r[circle_index])
-    ## mask of yellow 
-    mask = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
-    [color_det_y,M_y]=check_color(mask,h,w,x[circle_index],y[circle_index],r[circle_index])
-    ## mask of green 
-    mask = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
-    [color_det_g,M_g]=check_color(mask,h,w,x[circle_index],y[circle_index],r[circle_index])
-    ## mask of blue 
-    mask = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-    [color_det_b,M_b]=check_color(mask,h,w,x[circle_index],y[circle_index],r[circle_index])       
+    [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_g,M_g]=check_color(mask_g,h,w,x[circle_index],y[circle_index],r[circle_index])
+    [color_det_b,M_b]=check_color(mask_b,h,w,x[circle_index],y[circle_index],r[circle_index])       
     
     ## Detecting the color (R,Y,G,B) of the ball             
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
