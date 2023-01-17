@@ -27,9 +27,8 @@ def capture_image():
         image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
-        image = cv2.imdecode(numpy.fromfile('/home/pi/trilobot-examples/images/red_circle.PNG', dtype=numpy.uint8), cv2.IMREAD_UNCHANGED)
-        #image = cv2.imread('red_circle.png', cv2.IMREAD_COLOR)
-
+        #image = cv2.imdecode(numpy.fromfile('/home/pi/trilobot-examples/images/red_circle.PNG', dtype=numpy.uint8), cv2.IMREAD_UNCHANGED)
+        
         h, w, d = image.shape
         
     return image,w
@@ -91,8 +90,7 @@ def color_detection(image,x,y,r):
     mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
     ## mask of blue 
     mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-    #if mask_r.all()==mask_b.all() or mask_r.all()==mask_y.all() or mask_r.all()==mask_g.all():
-    #    print("ERROR")
+
     h, w, d = image.shape
     
     ## Selecting the biggest ball detected
