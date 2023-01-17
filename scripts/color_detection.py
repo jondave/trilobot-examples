@@ -84,6 +84,7 @@ def color_detection(image):
     [color_det_b,M_b]=check_color(mask_b,h,w)
     ## Detecting the color (R,Y,G,B) of an object in front of the robot 
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
+    print(color_det)
     M=[M_r,M_y,M_g,M_b]
     unknown_color=True
     for i in range(4):
