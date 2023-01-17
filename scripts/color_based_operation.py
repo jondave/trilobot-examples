@@ -98,7 +98,7 @@ def color_detection(image,x,y,r):
     for i in range(len(x)):
         if r[i]>=r[circle_index]:
             circle_index=i
-    
+    print("H",h,"W",w,"Y",y[circle_index],"X",x[circle_index],"R",r[circle_index])
     ## Masking
     [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
     [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
