@@ -77,6 +77,7 @@ def check_color(mask,h,w,x,y,r):
 def color_detection(image,x,y,r):
             
     ## convert to hsv
+    image = cv2.imread('/home/pi/trilobot-examples/images/blue_circle.png', cv2.IMREAD_COLOR)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     ## mask of red 
     mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
