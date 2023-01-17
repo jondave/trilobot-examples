@@ -88,7 +88,7 @@ def color_detection(image,x,y,r):
     mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
     ## mask of blue 
     mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-    if mask_r==mask_b or mask_r==mask_y or mask_r==mask_g:
+    if mask_r.all()==mask_b.all() or mask_r.all()==mask_y.all() or mask_r.all()==mask_g.all():
         print("ERROR")
     h, w, d = image.shape
     
