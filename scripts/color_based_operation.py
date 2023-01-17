@@ -27,7 +27,8 @@ def capture_image():
         image = numpy.empty((240 * 320 * 3,), dtype=numpy.uint8)
         camera.capture(image, 'bgr')
         image = image.reshape((240, 320, 3))
-        image = cv2.imread('red_circle.png', cv2.IMREAD_COLOR)
+        image = cv2.imdecode(np.fromfile('red_circle.png', dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        #image = cv2.imread('red_circle.png', cv2.IMREAD_COLOR)
 
         h, w, d = image.shape
         
