@@ -72,7 +72,6 @@ def check_color(mask,h,w,x,y,r):
         color_det=True
     else:
         color_det=False
-    print(color_det)
     return color_det,[M['m00'],M['m10'],M['m01']]
 
 def color_detection(image,x,y,r):
@@ -97,6 +96,7 @@ def color_detection(image,x,y,r):
     for i in range(len(x)):
         if r[i]>=r[circle_index]:
             circle_index=i
+    print("NUM CIRCLES",len(x),"INDEX",circle_index)
     ## Detecting the color (R,Y,G,B) of the ball          
     [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
     [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
