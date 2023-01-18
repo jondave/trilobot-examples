@@ -98,7 +98,7 @@ def color_detection(image,x,y,r):
     for i in range(len(x)):
         if r[i]>=r[circle_index]:
             circle_index=i
-    print("H",h,"W",w,"Y",y[circle_index],"X",x[circle_index],"R",r[circle_index])
+    
     ## Masking
     [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
     [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
@@ -108,7 +108,6 @@ def color_detection(image,x,y,r):
     ## Detecting the color (R,Y,G,B) of the ball             
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
     M=[M_r[0],M_y[0],M_g[0],M_b[0]]
-    print(color_det)
     unknown_color=True
     for j in range(4):
         # Is the ball of a known color?
@@ -116,7 +115,7 @@ def color_detection(image,x,y,r):
             if unknown_color==True:
                 color_index=j
                 unknown_color=False
-            # To prioritize the color detected with smaller M
+            # To prioritize the color detected with bigger M0
             if M[j]>M[color_index]:
                 color_index=j
     if unknown_color==False:
