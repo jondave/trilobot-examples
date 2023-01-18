@@ -1,4 +1,4 @@
-# This script uses the camera mounted on the trilobot to detect and locate and determine the color of circles/balls in the image. 
+# This script uses the camera mounted on the trilobot to detect, locate and determine the color of circles/balls in the image. 
 # The color of the circle/ball defines what action the robot must do including 1) moving forwards for 3 seconds 2) moving while creating a 
 # square shape path 3) moving while creating a circular shape path 4) adjusting the robot orientation to keep the circle/ball always detected 
 # in the center of the image.
