@@ -117,7 +117,7 @@ def color_detection(image,x,y,r):
                 color_index=j
                 unknown_color=False
             # To prioritize the color detected with smaller M
-            if M[j]<M[color_index]:
+            if M[j]>M[color_index]:
                 color_index=j
     if unknown_color==False:
         if color_index==0:
