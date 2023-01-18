@@ -107,7 +107,7 @@ def color_detection(image,x,y,r):
     
     ## Detecting the color (R,Y,G,B) of the ball             
     color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
-    M=[M_r,M_y,M_g,M_b]
+    M=[M_r[0],M_y[0],M_g[0],M_b[0]]
     print(color_det)
     unknown_color=True
     for j in range(4):
