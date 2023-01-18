@@ -58,10 +58,10 @@ def circle_detection(image):
 
 def check_color(mask,h,w,x,y,r):
     
-    search_top = int(y - r)
-    search_bot = int(y + r)
-    search_left = int(x - r)
-    search_right = int(x + r)
+    search_top = max(int(y - r),0)
+    search_bot = min(int(y + r),h)
+    search_left = max(int(x - r),0)
+    search_right = min(int(x + r),w)
     mask[0:search_top, 0:w] = 0
     mask[search_bot:h, 0:w] = 0
     mask[0:h, 0:search_left] = 0
@@ -127,36 +127,6 @@ def color_detection(image,color_wanted,x,y,r):
             color_detected=True
             break
         
-    """
-    ## convert to hsv
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    
-    if color_wanted=="RED":
-        ## mask of red 
-        mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
-        mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
-        mask=cv2.bitwise_or(mask_r_lower, mask_r_upper)
-    elif color_wanted=="YELLOW":
-        ## mask of yellow 
-        mask = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
-    elif color_wanted=="GREEN":
-        ## mask of green 
-        mask = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
-    elif color_wanted=="BLUE":
-        ## mask of blue 
-        mask = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
-    
-    ## Masking
-    h, w, d = image.shape
-    color_detected=False
-    index=[]
-    for i in range(len(x)):
-        [color_detected,M]=check_color(mask,h,w,x[i],y[i],r[i])
-        print(color_detected,i)
-        if color_detected==True:
-            index=i
-            break
-    """
     return color_detected,index,w
 
 def activate_leds(color_wanted):
