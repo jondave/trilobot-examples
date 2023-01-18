@@ -77,6 +77,59 @@ def check_color(mask,h,w,x,y,r):
 def color_detection(image,color_wanted,x,y,r):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    ## mask of red 
+    mask_r_lower = cv2.inRange(hsv, (0,0,0), (10, 255, 255))
+    mask_r_upper = cv2.inRange(hsv, (170,0,0), (180, 255, 255))
+    mask_r=cv2.bitwise_or(mask_r_lower, mask_r_upper)
+    ## mask of yellow 
+    mask_y = cv2.inRange(hsv, (15,0,0), (36, 255, 255))
+    ## mask of green 
+    mask_g = cv2.inRange(hsv, (36, 0, 0), (70, 255,255))
+    ## mask of blue 
+    mask_b = cv2.inRange(hsv, (100,0,0), (135, 255, 255))
+
+    h, w, d = image.shape
+    index=[]
+    color_detected=False
+    for circle_index in range(len(x)):
+        ## Masking
+        [color_det_r,M_r]=check_color(mask_r,h,w,x[circle_index],y[circle_index],r[circle_index])
+        [color_det_y,M_y]=check_color(mask_y,h,w,x[circle_index],y[circle_index],r[circle_index])
+        [color_det_g,M_g]=check_color(mask_g,h,w,x[circle_index],y[circle_index],r[circle_index])
+        [color_det_b,M_b]=check_color(mask_b,h,w,x[circle_index],y[circle_index],r[circle_index])       
+
+        ## Detecting the color (R,Y,G,B) of the ball             
+        color_det=[color_det_r,color_det_y,color_det_g,color_det_b]
+        M=[M_r[0],M_y[0],M_g[0],M_b[0]]
+        unknown_color=True
+        for j in range(4):
+            # Is the ball of a known color?
+            if color_det[j]==True:
+                if unknown_color==True:
+                    color_index=j
+                    unknown_color=False
+                # To prioritize the color detected with bigger M0
+                if M[j]>M[color_index]:
+                    color_index=j
+        if unknown_color==False:
+            if color_index==0:
+                object_color="RED"
+            elif color_index==1:
+                object_color="YELLOW"
+            elif color_index==2:
+                object_color="GREEN"
+            elif color_index==3:
+                object_color="BLUE"
+        else:
+            object_color="UNKNOWN"
+        if object_color==color_wanted:
+            index=circle_index
+            color_detected=True
+            break
+        
+    """
+    ## convert to hsv
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     
     if color_wanted=="RED":
         ## mask of red 
@@ -103,6 +156,7 @@ def color_detection(image,color_wanted,x,y,r):
         if color_detected==True:
             index=i
             break
+    """
     return color_detected,index,w
 
 def activate_leds(color_wanted):
