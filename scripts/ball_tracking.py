@@ -58,10 +58,10 @@ def circle_detection(image):
 
 def check_color(mask,h,w,x,y,r):
     
-    search_top = max(int(y - r),0)
-    search_bot = min(int(y + r),h)
-    search_left = max(int(x - r),0)
-    search_right = min(int(x + r),w)
+    search_top = max(int(y - r),1)
+    search_bot = min(int(y + r),h-1)
+    search_left = max(int(x - r),1)
+    search_right = min(int(x + r),w-1)
     mask[0:search_top, 0:w] = 0
     mask[search_bot:h, 0:w] = 0
     mask[0:h, 0:search_left] = 0
