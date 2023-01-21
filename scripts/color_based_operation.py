@@ -4,6 +4,8 @@
 # in the center of the image.
 # When the robot detects a circle/ball with a specific color, the LEDs keep activated in that color while the robot performs the specific action
 # otherwise they are turned off.
+# After detecting the circle/ball, the robot performs the corresponding action only once, in order to repeat the action, the circle/ball must 
+# be removed from the camera view to reset the robot's operation.
 
 import picamera
 import cv2
@@ -23,6 +25,7 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 action_completed=False # initial condition
+robot_action= "NO ACTION" # initial condition
 
 def capture_image():
     with picamera.PiCamera() as camera:
@@ -213,7 +216,7 @@ while True or KeyboardInterrupt:
     if num_balls>0:
         [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
         if ball_color!="UNKNOWN":
-            if action_completed==False or ball_color=="BLUE":
+            if action_completed==False or robot_action=="TRACKING THE BALL":
                 print("ACTION STARTED") 
                 #######################################################################################################################
                 #### TO BE COMPLETED ##################################################################################################
@@ -228,6 +231,8 @@ while True or KeyboardInterrupt:
             tbot.disable_motors()
     else:
         print("NO BALLS DETECTED")
-        action_completed=False # To reset the robot operation
+        if robot_action!="TRACKING THE BALL"
+            action_completed=False # To reset the robot operation
+            print("ROBOT OPERATION RESETED") 
         tbot.fill_underlighting(BLACK)  
         tbot.disable_motors()
