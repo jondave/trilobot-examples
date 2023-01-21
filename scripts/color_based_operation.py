@@ -217,14 +217,16 @@ while True or KeyboardInterrupt:
         [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
         if ball_color!="UNKNOWN":
             if action_completed==False or robot_action=="TRACKING THE BALL":
-                print("ACTION STARTED") 
+                if action_completed==False:
+                    print("ACTION STARTED") 
                 #######################################################################################################################
                 #### TO BE COMPLETED ##################################################################################################
                 robot_action=action_planner(ball_color,ball_pos_x,width)            
                 #######################################################################################################################
                 #######################################################################################################################
-                action_completed=True
-                print("ACTION COMPLETED")                         
+                if robot_action!="TRACKING THE BALL":
+                    action_completed=True
+                    print("ACTION COMPLETED")                         
         else:
             print("UNKNOWN COLOR") 
             tbot.fill_underlighting(BLACK)  
