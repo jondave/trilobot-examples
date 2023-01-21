@@ -22,7 +22,7 @@ CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
-action_completed==False # initial condition
+action_completed=False # initial condition
 
 def capture_image():
     with picamera.PiCamera() as camera:
