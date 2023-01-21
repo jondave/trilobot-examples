@@ -213,7 +213,7 @@ while True or KeyboardInterrupt:
     if num_balls>0:
         [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
         if ball_color!="UNKNOWN":
-            if action_completed==False:
+            if action_completed==False or ball_color=="BLUE":
                 print("ACTION STARTED") 
                 #######################################################################################################################
                 #### TO BE COMPLETED ##################################################################################################
