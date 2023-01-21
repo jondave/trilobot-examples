@@ -22,7 +22,7 @@ CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
-robot_action="NO ACTION" # initial condition
+action_completed==False # initial condition
 
 def capture_image():
     with picamera.PiCamera() as camera:
@@ -206,19 +206,22 @@ while True or KeyboardInterrupt:
     [num_balls,x_pos,y_pos,radius]=circle_detection(image)
     if num_balls>0:
         [ball_color,ball_pos_x]=color_detection(image,x_pos,y_pos,radius)
-        if ball_color!="UNKNOWN" and robot_action=="NO ACTION":
-            #######################################################################################################################
-            #### TO BE COMPLETED ##################################################################################################
-            robot_action=action_planner(ball_color,ball_pos_x,width)            
-            #######################################################################################################################
-            #######################################################################################################################
-            print("ACTION COMPLETED: ",robot_action)                         
+        if ball_color!="UNKNOWN":
+            if action_completed==False
+                print("ACTION STARTED") 
+                #######################################################################################################################
+                #### TO BE COMPLETED ##################################################################################################
+                robot_action=action_planner(ball_color,ball_pos_x,width)            
+                #######################################################################################################################
+                #######################################################################################################################
+                action_completed=True
+                print("ACTION COMPLETED")                         
         else:
-            print("UNKNOWN ACTION") 
+            print("UNKNOWN COLOR") 
             tbot.fill_underlighting(BLACK)  
             tbot.disable_motors()
     else:
         print("NO BALLS DETECTED")
-        robot_action="NO ACTION" # To reset the robot operation
+        action_completed=False # To reset the robot operation
         tbot.fill_underlighting(BLACK)  
         tbot.disable_motors()
