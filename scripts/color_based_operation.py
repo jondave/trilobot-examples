@@ -137,27 +137,14 @@ def color_detection(image,x,y,r):
         object_color="UNKNOWN"
     return object_color,x[circle_index]
 
-############################################################################################################## 
-#### TO BE COMPLETED #########################################################################################
 def action_planner(color,x_pos,width):
-    # This function needs to return a string named "robot_action" as follows:
-    # if color="RED" then robot_action="MOVING FORWARD FOR 3 SECONDS"
-    # if color="YELLOW then robot_action="FOLLOWING A SQUARE PATH"
-    # if color="GREEN" then robot_action="FOLLOWING A CIRCULAR PATH"
-    # if color="BLUE" then robot_action="TRACKING THE BALL", this will require to use variables "width" and "x_pos" 
-    # Remember to activate the LEDs with the corresponding color while the robot is performing an action. There is
-    # already a function call activate_leds() defined below that can be used for this.
-    
     activate_leds(color)
-    if color=="RED":
-        #Something here .......
-        vel=0.3
-        tbot.set_motor_speeds(vel, vel)
+    if color=="GREEN":
+        tbot.forward()
         time.sleep(3)
         tbot.stop()
         robot_action="MOVING FORWARD FOR 3 SECONDS"      
     elif color=="YELLOW":
-        #Something here .......
         tbot.forward()
         time.sleep(1)
         tbot.turn_right()
@@ -174,16 +161,14 @@ def action_planner(color,x_pos,width):
         time.sleep(1)
         tbot.stop()
         robot_action="FOLLOWING A SQUARE PATH"
-    elif color=="GREEN":
-        #Something here .......
+    elif color=="BLUE":
         vel_l=0.8
         vel_r=0.2
         tbot.set_motor_speeds(vel_l, vel_r)
         time.sleep(5)
         tbot.stop()
         robot_action="FOLLOWING A CIRCULAR PATH"
-    elif color=="BLUE":
-        #Something here .......
+    elif color=="RED":
         w=width
         x=x_pos
         err_x = x - w/2
@@ -193,12 +178,9 @@ def action_planner(color,x_pos,width):
             tbot.disable_motors()
         else:
             tbot.set_motor_speeds(-vel, vel)
-        #This will require to use variables "width" and "x_pos" 
         robot_action="TRACKING THE BALL"
         
     return robot_action
-#################################################################################################################
-#################################################################################################################
 
 def activate_leds(color):
     if color=="RED":
@@ -219,11 +201,7 @@ while True or KeyboardInterrupt:
             if action_completed==False or robot_action=="TRACKING THE BALL":
                 if action_completed==False:
                     print("ACTION STARTED") 
-                #######################################################################################################################
-                #### TO BE COMPLETED ##################################################################################################
                 robot_action=action_planner(ball_color,ball_pos_x,width)            
-                #######################################################################################################################
-                #######################################################################################################################
                 if robot_action!="TRACKING THE BALL":
                     action_completed=True
                     print("ACTION COMPLETED")                         
