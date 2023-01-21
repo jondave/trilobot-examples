@@ -231,7 +231,7 @@ while True or KeyboardInterrupt:
             tbot.disable_motors()
     else:
         print("NO BALLS DETECTED")
-        if robot_action!="TRACKING THE BALL":
+        if robot_action!="TRACKING THE BALL" and robot_action!="NO ACTION":
             action_completed=False # To reset the robot operation
             print("ROBOT OPERATION RESETED") 
         tbot.fill_underlighting(BLACK)  
