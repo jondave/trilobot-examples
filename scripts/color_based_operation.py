@@ -156,33 +156,33 @@ def action_planner(color,x_pos,width):
     elif color=="YELLOW":
         #Something here .......
         tbot.forward()
-        time.sleep(2)
+        time.sleep(1)
         tbot.turn_right()
-        time.sleep(2)
+        time.sleep(0.3)
         tbot.forward()
-        time.sleep(2)
+        time.sleep(1)
         tbot.turn_right()
-        time.sleep(2)
+        time.sleep(0.3)
         tbot.forward()
-        time.sleep(2)
+        time.sleep(1)
         tbot.turn_right()
-        time.sleep(2)
+        time.sleep(0.3)
         tbot.forward()
-        time.sleep(2)
+        time.sleep(1)
         tbot.stop()
         robot_action="FOLLOWING A SQUARE PATH"
     elif color=="GREEN":
         #Something here .......
-        vel_l=0.3
-        vel_r=0.1
-        tbot.set_motor_speeds(0.3, 0.1)
+        vel_l=0.8
+        vel_r=0.2
+        tbot.set_motor_speeds(vel_l, vel_r)
         time.sleep(5)
         tbot.stop()
         robot_action="FOLLOWING A CIRCULAR PATH"
     elif color=="BLUE":
         #Something here .......
         w=width
-        x_pos=x
+        x=x_pos
         err_x = x - w/2
         vel = 0.5*(-float(err_x) / 100)
         print("VELOCITY",vel)
