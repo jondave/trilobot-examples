@@ -8,6 +8,7 @@
 import picamera
 import cv2
 import numpy
+import time
 from trilobot import *
 
 # create the robot object
@@ -134,28 +135,59 @@ def color_detection(image,x,y,r):
 ############################################################################################################## 
 #### TO BE COMPLETED #########################################################################################
 def action_planner(color,x_pos,width):
-    # This function needs to return the string variable named "robot_action" as follows:
+    # This function needs to return a string named "robot_action" as follows:
     # if color="RED" then robot_action="MOVING FORWARD FOR 3 SECONDS"
     # if color="YELLOW then robot_action="FOLLOWING A SQUARE PATH"
     # if color="GREEN" then robot_action="FOLLOWING A CIRCULAR PATH"
     # if color="BLUE" then robot_action="TRACKING THE BALL", this will require to use variables "width" and "x_pos" 
-    # Remember to activate the LEDs with the corresponding color while the robot is performing an action.
+    # Remember to activate the LEDs with the corresponding color while the robot is performing an action. There is
+    # already a function call activate_leds() defined below that can be used for this.
+    
     activate_leds(color)
     if color=="RED":
         #Something here .......
+        vel=0.3
+        tbot.set_motor_speeds(vel, vel)
+        time.sleep(3)
         robot_action="MOVING FORWARD FOR 3 SECONDS"      
     elif color=="YELLOW":
         #Something here .......
+        vel=0.3
+        tbot.set_motor_speeds(vel, vel)
+        time.sleep(2)
+        tbot.turn_right()
+        tbot.set_motor_speeds(vel, vel)
+        time.sleep(2)
+        tbot.turn_right()
+        tbot.set_motor_speeds(vel, vel)
+        time.sleep(2)
+        tbot.turn_right()
+        tbot.set_motor_speeds(vel, vel)
         robot_action="FOLLOWING A SQUARE PATH"
     elif color=="GREEN":
         #Something here .......
+        vel_l=0.3
+        vel_r=0.1
+        tbot.set_motor_speeds(0.3, 0.1)
+        time.sleep(5)
         robot_action="FOLLOWING A CIRCULAR PATH"
     elif color=="BLUE":
         #Something here .......
+        w=width
+        x_pos=x
+        err_x = x - w/2
+        vel = 0.5*(-float(err_x) / 100)
+        print("VELOCITY",vel)
+        if abs(vel)<0.15:
+            tbot.disable_motors()
+        else:
+            tbot.set_motor_speeds(-vel, vel)
         #This will require to use variables "width" and "x_pos" 
         robot_action="TRACKING THE BALL"
         
     return robot_action
+#################################################################################################################
+#################################################################################################################
 
 def activate_leds(color):
     if color=="RED":
@@ -166,8 +198,6 @@ def activate_leds(color):
         tbot.fill_underlighting(GREEN)
     elif color=="BLUE":
         tbot.fill_underlighting(BLUE)   
-##############################################################################################################    
-##############################################################################################################
 
 while True or KeyboardInterrupt:
     [image,width]=capture_image()
