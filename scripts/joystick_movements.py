@@ -7,6 +7,7 @@ import struct
 
 """
 An example of how move Trilobot with Logitech games controller..
+# https://www.socsci.ru.nl/wilberth/computer/joystick.html #
 """
 print("Trilobot Example: Joystick Movement\n")
 
