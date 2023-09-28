@@ -1,4 +1,14 @@
 # Trilobot-examples
+Example python scripts for the trilobot robot.
+
+Clone this repository into the home directory of the trilobot ```git clone https://github.com/jondave/trilobot-examples.git```.
+
+Change the directory to the scripts folder ```cd trilobot-examples/scripts```.
+
+To run a python script enter the command ```python3 scriptname.py```, change "scriptname" to the name of python file.
+
+E.g. flash the lights ```python3 flash_underlights.py```.
+Or control the robot with the keyboard ```python3 keyboard_movements.py```.
 
 # Trilobot Instructions
 https://learn.pimoroni.com/article/assembling-trilobot
