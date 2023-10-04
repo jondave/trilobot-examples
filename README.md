@@ -45,3 +45,13 @@ Also may need to install trilotbot python package;
 pip install trilobot 
 pip3 install trilobot
 ```
+
+# VNC not showing desktop
+```
+sudo nano /boot/config.txt
+```
+
+Uncomment:
+```
+hdmi_force_hotplug=1
+```
