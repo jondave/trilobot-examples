@@ -64,3 +64,5 @@ dtoverlay=imx219
 ```
 Use this for python code for camera.
 https://raspberrytips.com/picamera2-raspberry-pi/
+https://github.com/raspberrypi/picamera2/tree/main
+https://github.com/raspberrypi/picamera2/tree/main/examples
